@@ -26,7 +26,7 @@ class Event(models.Model):
     date = models.DateField()
     time = models.TimeField()
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
-    participants = models.ManyToManyField(Participant,related_name='events')
+    participants = models.ManyToManyField(Participant,related_name='events',blank=True,null=True)
     
     def __str__(self):
         return self.name
