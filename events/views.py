@@ -30,7 +30,7 @@ def create_event(request):
 
 
 """ Update Event """
-def update_event(request):
+def update_event(request, id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance=event)
     
@@ -48,31 +48,41 @@ def update_event(request):
             event_location.save()
             
             messages.success(request,"Event Updated Successfully")
-            return redirect('update_event')
+            return redirect('update_event',id=id)
+        # else: 
+        #     messages.error(request,"Somthing wrong")
+        #     return redirect('update_event',id=id)
+            
         
     context = {"event_form": event_form, "event_location_form":event_location_form}
     return render(request, "event_form.html", context)
 
 
 """ Delete Event """
-def delete_event(request):
+def delete_event(request, id):
     if request.method == 'POST':
         event = Event.objects.get(id=id)
         event.delete()
         
         messages.success(request, "Event Deleted Successfully")
-        return redirect('update_event')
+        return redirect('manager_dashboard')
     else:
         messages.error(request, "Something Wrong")
-        return redirect('update_event')
+        return redirect('manager_dashboard')
 
 
 
-""" view Event """
-def view_event(request):
+""" view Event count by Category """
+def view_event_count(request):
     category = Category.objects.annotate(
         num_event = Count('event')).order_by('num_event')
     return render(request,"show_event.html", {"category": category})
+
+
+""" view Event List """
+def view_event_list(request):
+    events = Event.objects.all().order_by('-date')
+    return render(request, "manager_dashboard.html", {"events": events})
 
 
 """ Create Category """
@@ -103,3 +113,7 @@ def delete_category(request):
     else:
         messages.error(request, "Something Wrong")
         return redirect('delete_category')
+
+
+def manager_dashboard(request):
+    return render(request, "manager_dashboard.html")

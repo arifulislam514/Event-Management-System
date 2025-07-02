@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{% endblock title %}</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/brands.min.css"
+    integrity="sha512-58P9Hy7II0YeXLv+iFiLCv1rtLW47xmiRpC1oFafeKNShp8V5bKV/ciVtYqbk2YfxXQMt58DjNfkXFOn62xE+g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+</head>
+
+<body class="p-9 max-w-screen-xl mx-auto bg-gray-100">
+
+  <!-- Navigation Bar  -->
+  <nav class="bg-blue-400 px-4 py-3">
+    <div class="flex justify-between items-center">
+      <a href="#" class="text-white text-lg font-bold">EventManager</a>
+
+      <details class="md:hidden relative">
+        <summary class="p-2 cursor-pointer text-white rounded inline-flex items-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </summary>
+
+        <!-- Mobile Menu -->
+        <div class="absolute bg-blue-400 w-64 mt-2 right-0 shadow-lg rounded-lg z-50">
+          <ul class="flex flex-col text-white divide-y">
+            <li><a href="#" class="p-4 block">Home</a></li>
+            <li><a href="#" class="p-4 block">Events</a></li>
+            <li><a href="#" class="p-4 block">Participants</a></li>
+            <li><a href="#" class="p-4 block">Categories</a></li>
+            <li><a href="{% url 'manager_dashboard' %}" class="p-4 block hover:text-gray-200 hover:bg-blue-600">Dashboard</a></li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- Desktop Menu -->
+      <ul class="hidden md:flex space-x-6 text-white font-medium">
+        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Home</a></li>
+        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Events</a></li>
+        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Participants</a></li>
+        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Categories</a></li>
+        <li><a href="{% url 'manager_dashboard' %}" class="hover:text-gray-200 hover:bg-blue-600">Dashboard</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+
+    {% block content %}{% endblock content %}
+
+  </main>
+
+
+  <!-- Foter Section  -->
+  <footer class="bg-blue-400 text-white text-center py-6 mt-10">
+    <div class="mt-6 space-y-2">
+      <p class="text-sm leading-relaxed">
+        © 2023 Ariful Islam. All rights reserved
+      </p>
+      <p class="text-sm">Kunming, Yunnan, China</p>
+
+      <div class="flex justify-center items-center gap-6 mt-4 text-2xl">
+        <a href="https://github.com/arifulislam514/test-project.git" target="_blank"
+          class="hover:text-gray-400 transition">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a href="https://www.facebook.com/muzan365" target="_blank" class="hover:text-blue-500 transition">
+          <i class="fa-brands fa-facebook"></i>
+        </a>
+        <a href="https://www.instagram.com/muzan_365" target="_blank" class="hover:text-pink-500 transition">
+          <i class="fa-brands fa-square-instagram"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>

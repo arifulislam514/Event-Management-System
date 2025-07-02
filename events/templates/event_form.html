@@ -1,13 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="w-1/2 mx-auto mt-8">
+{% extends "base.html" %}
+{% block title %}Event{% endblock title %}
+
+{% block content %}
+<div class="w-1/2 mx-auto mt-8">
         <div>
             {% if messages %}
                 {% for message in messages %}
@@ -15,13 +10,12 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <form method="POST">
+        <form method="POST" class="bg-white p-5">
             
             {% csrf_token %}
             {{ event_form }}
             {{ location_form }}
-            <button type="submit" class="mb-5 bg-rose-600 px-3 py-2 text-white mt-2 rounded-md">Submit</button>
+            <button type="submit" class="mb-5 bg-blue-400 hover:bg-blue-600 px-3 py-2 text-white mt-2 rounded-md">Submit</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock content %}
