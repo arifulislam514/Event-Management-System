@@ -1,7 +1,7 @@
 from django.db import models
 
 
-""" Create Participant Model """
+""" Participant Model """
 class Participant(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -10,7 +10,7 @@ class Participant(models.Model):
         return self.name
 
 
-""" Create Category M0del """
+""" Category M0del """
 class Category(models.Model):
     name = models.CharField(max_length=70)
     description = models.TextField(blank=True, null=True)
@@ -19,7 +19,7 @@ class Category(models.Model):
         return self.name
 
 
-""" Create Event M0del """
+""" Event M0del """
 class Event(models.Model):
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)

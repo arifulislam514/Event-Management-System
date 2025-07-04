@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from events.models import Event, Category, Participant
-from events.forms import EventModelForm, CategoryModelForm, LocationModelForm
+from events.forms import EventModelForm, CategoryModelForm, LocationModelForm, ParticipantModelForm
 from django.contrib import messages
 from django.db.models import Q, Count, Max, Min, Avg
+from datetime import time, datetime
 
 
 """ Create Event """
@@ -25,37 +26,68 @@ def create_event(request):
             return redirect('create_event')
         
     context = {"event_form": event_form, "location_form":location_form}
-    return render(request, "event_form.html", context)
+    return render(request, "dashboard/event_form.html", context)
             
 
 
 """ Update Event """
+# def update_event(request, id):
+#     event = Event.objects.get(id=id)
+#     event_form = EventModelForm(instance=event)
+    
+#     if event.location:
+#         event_location_form = LocationModelForm(instance=event.location)
+        
+#     if request.method == "POST":
+#         event_form = EventModelForm(request.POST, instance=event)
+#         event_location_form = LocationModelForm(request.POST, instance=event.location)
+        
+#         if event_form.is_valid() and event_location_form.is_valid():
+#             event = event_form.save()
+#             event_location = event_location_form.save(commit=False)
+#             event_location.event = event
+#             event_location.save()
+            
+#             messages.success(request,"Event Updated Successfully")
+#             return redirect('update_event',id=id)
+#         # else: 
+#         #     messages.error(request,"Somthing wrong")
+#         #     return redirect('update_event',id=id)
+            
+        
+#     context = {"event_form": event_form, "event_location_form":event_location_form}
+#     return render(request, "event_form.html", context)
+
+
 def update_event(request, id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance=event)
-    
-    if event.location:
-        event_location_form = LocationModelForm(instance=event.location)
-        
+    event_location_form = LocationModelForm(instance=event.location)if event.location else LocationModelForm()
+
     if request.method == "POST":
         event_form = EventModelForm(request.POST, instance=event)
-        event_location_form = LocationModelForm(request.POST, instance=event.location)
-        
+        event_location_form = LocationModelForm(request.POST, instance=event.location) if event.location else LocationModelForm(request.POST)
+
         if event_form.is_valid() and event_location_form.is_valid():
             event = event_form.save()
             event_location = event_location_form.save(commit=False)
             event_location.event = event
             event_location.save()
-            
-            messages.success(request,"Event Updated Successfully")
-            return redirect('update_event',id=id)
-        # else: 
-        #     messages.error(request,"Somthing wrong")
-        #     return redirect('update_event',id=id)
-            
-        
-    context = {"event_form": event_form, "event_location_form":event_location_form}
-    return render(request, "event_form.html", context)
+
+            messages.success(request, "Event Updated Successfully")
+            return redirect('update_event', id=id)
+        else:
+            print(event_form.errors)
+            print(event_location_form.errors)
+            messages.error(request, "Error updating the event.")
+
+    context = {
+        "event_form": event_form,
+        "event_location_form": event_location_form
+    }
+    return render(request, "dashboard/event_form.html", context)
+
+
 
 
 """ Delete Event """
@@ -76,13 +108,13 @@ def delete_event(request, id):
 def view_event_count(request):
     category = Category.objects.annotate(
         num_event = Count('event')).order_by('num_event')
-    return render(request,"show_event.html", {"category": category})
+    return render(request,"dashboard/show_event.html", {"category": category})
 
 
 """ view Event List """
 def view_event_list(request):
     events = Event.objects.all().order_by('-date')
-    return render(request, "manager_dashboard.html", {"events": events})
+    return render(request, "dashboard/manager_dashboard.html", {"events": events})
 
 
 """ Create Category """
@@ -99,11 +131,28 @@ def create_category(request):
             return redirect('create_category')
         
     context = {"category_form": category_form}
-    return render(request, "category_form.html", context)
+    return render(request, "dashboard/category_form.html", context)
+
+
+""" Update Category """
+def update_category(request, id):
+    category = Category.objects.get(id=id)
+    category_form = CategoryModelForm(instance=category)
+    if request.method == "POST":
+        category_form = CategoryModelForm(request.POST, instance=category)
+
+        if category_form.is_valid():
+            category = category_form.save()
+
+            messages.success(request, "Category Updated Successfully")
+            return redirect('update_event', id=id)
+        else:
+            print(category_form.errors)
+            messages.error(request, "Error updating the category.")
 
 
 """ Delete Category """
-def delete_category(request):
+def delete_category(request, id):
     if request.method == 'POST':
         category = Category.objects.get(id=id)
         category.delete()
@@ -114,6 +163,95 @@ def delete_category(request):
         messages.error(request, "Something Wrong")
         return redirect('delete_category')
 
+""" view Category List """
+def view_category_list(request):
+    category = Category.objects.all()
+    return render(request, "dashboard/manager_dashboard.html", {"category": category})
+
+
+""" Add Participant """
+def add_participant(request):
+    participant_form = ParticipantModelForm()
+    if request.method == "POST":
+        participant_form = ParticipantModelForm(request.POST)
+        
+        if participant_form.is_valid():
+            participant_form.save()
+            
+            messages.success(request,"Participant Added Successfully")
+            return redirect('add_participant')
+        
+    context = {"participant_form": participant_form}
+    return render(request, "dashboard/participant_form.html", context)
+
+
+""" Update Participant """
+def update_participant(request, id):
+    participant = Participant.objects.get(id=id)
+    participant_form = ParticipantModelForm(instance=participant)
+    if request.method == "POST":
+        participant_form = ParticipantModelForm(request.POST, instance=participant)
+
+        if participant_form.is_valid():
+            category = participant_form.save()
+
+            messages.success(request, "Participant Updated Successfully")
+            return redirect('update_participant', id=id)
+        else:
+            print(participant_form.errors)
+            messages.error(request, "Error updating the Participant.")
+
+
+
+""" Delete Participant """
+def delete_participant(request, id):
+    if request.method == 'POST':
+        participant = Participant.objects.get(id=id)
+        participant.delete()
+        
+        messages.success(request, "Participant Deleted Successfully")
+        return redirect('delete_participant')
+    else:
+        messages.error(request, "Something Wrong")
+        return redirect('delete_participant')
+    
+
+""" view Participant List """
+def view_participant_list(request):
+    participant = Participant.objects.all()
+    return render(request, "dashboard/manager_dashboard.html", {"participant": participant})
+
+
+
+# def manager_dashboard(request):
+#     return render(request, "dashboard/manager_dashboard.html")
 
 def manager_dashboard(request):
-    return render(request, "manager_dashboard.html")
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    counts = Event.objects.aggregate(
+        total=Count('id'),
+        past_events=Count('id', filter=Q(date__lt=current_date) | Q(date=current_date, time__lt=current_time)),
+        upcoming_events=Count('id', filter=Q(date__gt=current_date)  | Q(date=current_date, time__gte=current_time)),
+    )
+
+    # base_query = Event.objects.select_related(
+    #     'details').prefetch_related('assigned_to')
+
+    # if type == 'completed':
+    #     tasks = base_query.filter(status='COMPLETED')
+    # elif type == 'in-progress':
+    #     tasks = base_query.filter(status='IN_PROGRESS')
+    # elif type == 'pending':
+    #     tasks = base_query.filter(status='PENDING')
+    # elif type == 'all':
+    #     tasks = base_query.all()
+    events = Event.objects.filter(
+        Q(date=current_date, time__gte=current_time)
+    )
+    context = {
+        "events": events,
+        "counts": counts
+    }
+    return render(request, "dashboard/manager_dashboard.html", context)

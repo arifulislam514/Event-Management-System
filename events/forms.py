@@ -49,6 +49,16 @@ class EventModelForm(StyledFormMixin,forms.ModelForm):
         self.apply_styled_widgets()
         
         
+class ParticipantModelForm(StyledFormMixin,forms.ModelForm):
+    class Meta:
+        model = Participant
+        fields = ['name', 'email']
+        
+    def __init__(self, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.apply_styled_widgets()
+        
+        
 class CategoryModelForm(StyledFormMixin,forms.ModelForm):
     class Meta:
         model = Category
@@ -59,11 +69,16 @@ class CategoryModelForm(StyledFormMixin,forms.ModelForm):
     def __init__(self, *arg, **kwarg):
         super().__init__(*arg, **kwarg)
         self.apply_styled_widgets()
-        
-        
-class LocationModelForm(forms.ModelForm):
+
+
+class LocationModelForm(StyledFormMixin,forms.ModelForm):
     class Meta:
         model = Location
         fields = ['country', 'city']
-    
 
+    def __init__(self, *args, **kwargs):
+        super(LocationModelForm, self).__init__(*args, **kwargs)
+        self.apply_styled_widgets()
+        self.fields['country'].required = False          
+        self.fields['city'].required = False  
+    
