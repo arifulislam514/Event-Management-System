@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+<main>
+    {% comment %} event cart  {% endcomment %}
+    <div class="grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-6 mb-8">
+        {% for event in events %}
+            <a href='{% url "event_detaile" event.id %}'>
+                <div class=" bg-white rounded-lg shadow-md p-5 mt-8">
+                    <div class="mb-4">
+                        <img class="h-48 w-full rounded-lg" src="{% static 'images/event.jpg' %}" alt="img">
+                    </div>
+                    <p class="font-semibold text-lg">{{event.name}}</p>
+                    <p>{{event.description}}</p>
+                    <p><span class="font-semibold">Category : </span> {{event.category}}</p>
+                    <p><span class="font-semibold">Participant : </span> {{event.participant_count}}</p>
+                </div>
+            </a>
+        {% endfor %}
+        
+        
+
+    </div>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

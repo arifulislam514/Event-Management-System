@@ -24,7 +24,7 @@
         <!-- cart section  -->
         <div class="grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-6 mb-8">
             <!-- Total task  -->
-             <a href="#">
+             <a href="{% url 'manager_dashboard' %}?type=all">
                 <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
                     <p class=" text-gray-500">Total Events</p>
                     <div class="flex items-center justify-between"><!--  sub div  -->
@@ -43,47 +43,51 @@
                 </div>
             </a>
             <!-- Completed Task  -->
-            <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
-                <p class=" text-gray-500">Past Events</p>
-                <div class="flex items-center justify-between"><!--  sub div  -->
-                    <div>
-                        <p class=" font-semibold text-3xl mt-3">{{counts.past_events}}</p>
-                        <p class=" text-gray-500">11 last month</p>
-                    </div>
-                    <div class=" rounded-full bg-green-200 p-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="size-6 text-green-700">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
+             <a href="{% url 'manager_dashboard' %}?type=past_event">
+                <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
+                    <p class=" text-gray-500">Past Events</p>
+                    <div class="flex items-center justify-between"><!--  sub div  -->
+                        <div>
+                            <p class=" font-semibold text-3xl mt-3">{{counts.past_events}}</p>
+                            <p class=" text-gray-500">11 last month</p>
+                        </div>
+                        <div class=" rounded-full bg-green-200 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="size-6 text-green-700">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
 
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <!-- Task In Progress  -->
-            <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
-                <p class=" text-gray-500">Upcoming Events</p>
-                <div class="flex items-center justify-between"><!--  sub div  -->
-                    <div>
-                        <p class=" font-semibold text-3xl mt-3">{{counts.upcoming_events}}</p>
-                        <p class=" text-gray-500">11 last month</p>
-                    </div>
-                    <div class=" rounded-full bg-yellow-200 p-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="size-6 text-yellow-700">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
+             <a href="{% url 'manager_dashboard' %}?type=upcoming_event">
+                <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
+                    <p class=" text-gray-500">Upcoming Events</p>
+                    <div class="flex items-center justify-between"><!--  sub div  -->
+                        <div>
+                            <p class=" font-semibold text-3xl mt-3">{{counts.upcoming_events}}</p>
+                            <p class=" text-gray-500">11 last month</p>
+                        </div>
+                        <div class=" rounded-full bg-yellow-200 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="size-6 text-yellow-700">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
 
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             <!-- TODOS  -->
             <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
                 <p class=" text-gray-500">Participants</p>
                 <div class="flex items-center justify-between"><!--  sub div  -->
                     <div>
-                        <h3 class=" font-semibold text-3xl mt-3">3</h3>
+                        <h3 class=" font-semibold text-3xl mt-3">{{participant_counts.total}}</h3>
                         <p class=" text-gray-500">11 last month</p>
                     </div>
                     <div class=" rounded-full bg-fuchsia-200 p-3">
@@ -100,7 +104,11 @@
         <!-- Task List  -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> <!-- Main Div -->
             <div class="bg-white rounded-lg shadow-md p-5"> <!-- Today Task  -->
-                <span class=" text-lg font-bold">Today's Events</span>
+                <div class="flex justify-between">
+                    <span class=" text-lg font-bold">{{event_type}}</span>
+                    <a href="{% url 'create_event' %}" class="px-2 py-1 bg-blue-400 hover:bg-blue-600 font-semibold text-white rounded-sm">ADD</a>
+
+                </div>
                 <!-- Task List  -->
                 <div class="grid grid-cols-3 gap-3 my-2"> <!-- Tas Head -->
                     <span>NAME</span>
@@ -119,15 +127,18 @@
                         </div>
                         {% comment %} Date {% endcomment %}
                         <div><span>{{event.date}}</span></div>
-                        <div><span>{{event.time}}</span></div>
-                        {% comment %} Edit And Delete Option {% endcomment %}
-                        {% comment %} <div class="flex gap-1">
-                            <a href='{% url "update_event" event.id %}' class="px-2 py-1 bg-green-500">Edit</a>
-                            <form action='{% url "delete_event" event.id %}' method='POST'>
-                                {% csrf_token %}
-                                <button type='submit' class="px-2 py-1 bg-red-500">Delete</button>
-                            </form>
-                        </div> {% endcomment %}
+                        <div class="grid grid-cols-3">
+                            <span>{{event.time}}</span>
+                            {% comment %} Edit And Delete Option {% endcomment %}
+                            <div class="flex gap-1">
+                                <a href='{% url "update_event" event.id %}' class="px-2 py-1 bg-green-500">Edit</a>
+                                <form action='{% url "delete_event" event.id %}' method='POST'>
+                                    {% csrf_token %}
+                                    <button type='submit' class="px-2 py-1 bg-red-500">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        
                     </div>
 
                 {% endfor %}
@@ -145,48 +156,6 @@
 
 
 
-
-
-
-
-                {% comment %} <div class="grid grid-cols-4 items-center gap-3 mb-2">
-                    <div class="flex items-center gap-4">
-                        <div class="h-2 w-2 rounded-full bg-red-600"></div>
-                        <span>Test Task</span>
-                    </div>
-                    <div class="flex"><span class=" bg-blue-400 px-2 rounded-lg">Normal</span></div>
-                    <div class="flex -space-x-2"> <!-- Team  -->
-                        <div class="h-7 w-7 rounded-full bg-green-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">A</Span>
-                        </div>
-                        <div class="h-7 w-7 rounded-full bg-red-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">B</Span>
-                        </div>
-                        <div class="h-7 w-7 rounded-full bg-blue-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">C</Span>
-                        </div>
-                    </div>
-                    <span>9 Month ago</span>
-                </div>
-                <div class="grid grid-cols-4 items-center gap-3 mb-2">
-                    <div class="flex items-center gap-4">
-                        <div class="h-2 w-2 rounded-full bg-blue-600"></div>
-                        <span>Test Task</span>
-                    </div>
-                    <div class="flex"><span class=" bg-blue-400 px-2 rounded-lg">High</span></div>
-                    <div class="flex -space-x-2"> <!-- Team  -->
-                        <div class="h-7 w-7 rounded-full bg-green-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">A</Span>
-                        </div>
-                        <div class="h-7 w-7 rounded-full bg-red-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">B</Span>
-                        </div>
-                        <div class="h-7 w-7 rounded-full bg-blue-500 flex items-center justify-center border-2 border-white">
-                            <Span class=" text-white">C</Span>
-                        </div>
-                    </div>
-                    <span>9 Month ago</span>
-                </div> {% endcomment %}
                 
             </div>
         </div>

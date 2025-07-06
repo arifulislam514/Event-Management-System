@@ -40,7 +40,7 @@ class StyledFormMixin:
 class EventModelForm(StyledFormMixin,forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['name', 'category', 'date', 'time', 'description']
+        fields = ['name', 'category', 'date', 'time', 'description', 'participants']
         
     """ Widget using mixins """
 

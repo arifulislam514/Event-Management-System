@@ -8,5 +8,8 @@ urlpatterns = [
     path('update_event/<int:id>/', update_event, name="update_event"),
     path('create_category/', create_category, name="create_category"),
     path('add_participant/', add_participant, name="add_participant"),
-    path('manager_dashboard/', views.manager_dashboard, name="manager_dashboard")
+    path('manager_dashboard/', views.manager_dashboard, name="manager_dashboard"),
+    path('home/', views.home, name="home"),
+    path('events/', views.events, name="events"),
+    path('event_detaile/<int:id>', views.event_detaile, name="event_detaile"),
 ]

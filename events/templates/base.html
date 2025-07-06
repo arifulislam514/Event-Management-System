@@ -31,7 +31,7 @@
         <!-- Mobile Menu -->
         <div class="absolute bg-blue-400 w-64 mt-2 right-0 shadow-lg rounded-lg z-50">
           <ul class="flex flex-col text-white divide-y">
-            <li><a href="#" class="p-4 block">Home</a></li>
+            <li><a href="{% url 'home' %}" class="p-4 block">Home</a></li>
             <li><a href="#" class="p-4 block">Events</a></li>
             <li><a href="#" class="p-4 block">Participants</a></li>
             <li><a href="#" class="p-4 block">Categories</a></li>
@@ -42,8 +42,8 @@
 
       <!-- Desktop Menu -->
       <ul class="hidden md:flex space-x-6 text-white font-medium">
-        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Home</a></li>
-        <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Events</a></li>
+        <li><a href="{% url 'home' %}" class="hover:text-gray-200 hover:bg-blue-600">Home</a></li>
+        <li><a href="{% url 'events' %}" class="hover:text-gray-200 hover:bg-blue-600">Events</a></li>
         <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Participants</a></li>
         <li><a href="#" class="hover:text-gray-200 hover:bg-blue-600">Categories</a></li>
         <li><a href="{% url 'manager_dashboard' %}" class="hover:text-gray-200 hover:bg-blue-600">Dashboard</a></li>

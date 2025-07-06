@@ -66,7 +66,7 @@ def update_event(request, id):
 
     if request.method == "POST":
         event_form = EventModelForm(request.POST, instance=event)
-        event_location_form = LocationModelForm(request.POST, instance=event.location) if event.location else LocationModelForm(request.POST)
+        event_location_form = LocationModelForm(request.POST, instance=event.location)if event.location else LocationModelForm(request.POST)
 
         if event_form.is_valid() and event_location_form.is_valid():
             event = event_form.save()
@@ -217,9 +217,16 @@ def delete_participant(request, id):
     
 
 """ view Participant List """
-def view_participant_list(request):
-    participant = Participant.objects.all()
-    return render(request, "dashboard/manager_dashboard.html", {"participant": participant})
+# def view_participant_list(request):
+    # participant_counts = Participant.objects.aggregate(
+    #     total = Count('id')
+    # )
+    # participant = Participant.objects.all()
+    # context = {
+    #     "participant": participant,
+    #     "participant_counts": participant_counts
+    # }
+    # return render(request, "dashboard/manager_dashboard.html", context)
 
 
 
@@ -227,31 +234,64 @@ def view_participant_list(request):
 #     return render(request, "dashboard/manager_dashboard.html")
 
 def manager_dashboard(request):
+    type = request.GET.get('type','today')
     current_date = datetime.now().date()
     current_time = datetime.now().time()
 
+    participant_counts = Participant.objects.aggregate(
+        total = Count('id')
+    )
+    
     counts = Event.objects.aggregate(
         total=Count('id'),
         past_events=Count('id', filter=Q(date__lt=current_date) | Q(date=current_date, time__lt=current_time)),
         upcoming_events=Count('id', filter=Q(date__gt=current_date)  | Q(date=current_date, time__gte=current_time)),
     )
 
-    # base_query = Event.objects.select_related(
-    #     'details').prefetch_related('assigned_to')
+    base_query = Event.objects.select_related(
+        'location')
 
-    # if type == 'completed':
-    #     tasks = base_query.filter(status='COMPLETED')
-    # elif type == 'in-progress':
-    #     tasks = base_query.filter(status='IN_PROGRESS')
-    # elif type == 'pending':
-    #     tasks = base_query.filter(status='PENDING')
-    # elif type == 'all':
-    #     tasks = base_query.all()
-    events = Event.objects.filter(
-        Q(date=current_date, time__gte=current_time)
-    )
+    if type == 'past_event':
+        events = base_query.filter(date__lt=current_date) | base_query.filter(date=current_date, time__lt=current_time)
+        event_type = "Past Events"
+    elif type == 'upcoming_event':
+        events = base_query.filter(date__gt=current_date)  | base_query.filter(date=current_date, time__gte=current_time)
+        event_type = "Upcoming Events"
+    elif type == 'today':
+        events = base_query.filter(date=current_date, time__gte=current_time)
+        event_type = "Today Events"
+    elif type == 'all':
+        events = base_query.all()
+        event_type = "All Events"
+        
+    # events = Event.objects.filter(
+    #     Q(date=current_date, time__gte=current_time)
+    # )
     context = {
         "events": events,
-        "counts": counts
+        "counts": counts,
+        "event_type": event_type,
+        "participant_counts": participant_counts
     }
     return render(request, "dashboard/manager_dashboard.html", context)
+
+
+def home(request):
+    return render(request, "dashboard/home.html")
+
+def event_detaile(request, id):
+    events = Event.objects.select_related('location', 'category').prefetch_related('participants').get(id=id)
+    print(events)
+
+    context = {
+        "events": events,
+    }
+    return render(request, "dashboard/event_detaile.html", context)
+
+
+def events(request):
+    events = Event.objects.select_related('location','category').prefetch_related('participants').annotate(participant_count=Count('participants')).all()
+    context = {
+        "events": events
+    }
+    return render(request, "dashboard/events.html", context)
