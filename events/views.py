@@ -31,34 +31,6 @@ def create_event(request):
 
 
 """ Update Event """
-# def update_event(request, id):
-#     event = Event.objects.get(id=id)
-#     event_form = EventModelForm(instance=event)
-    
-#     if event.location:
-#         event_location_form = LocationModelForm(instance=event.location)
-        
-#     if request.method == "POST":
-#         event_form = EventModelForm(request.POST, instance=event)
-#         event_location_form = LocationModelForm(request.POST, instance=event.location)
-        
-#         if event_form.is_valid() and event_location_form.is_valid():
-#             event = event_form.save()
-#             event_location = event_location_form.save(commit=False)
-#             event_location.event = event
-#             event_location.save()
-            
-#             messages.success(request,"Event Updated Successfully")
-#             return redirect('update_event',id=id)
-#         # else: 
-#         #     messages.error(request,"Somthing wrong")
-#         #     return redirect('update_event',id=id)
-            
-        
-#     context = {"event_form": event_form, "event_location_form":event_location_form}
-#     return render(request, "event_form.html", context)
-
-
 def update_event(request, id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance=event)
@@ -145,10 +117,15 @@ def update_category(request, id):
             category = category_form.save()
 
             messages.success(request, "Category Updated Successfully")
-            return redirect('update_event', id=id)
+            return redirect('update_category', id=id)
         else:
             print(category_form.errors)
             messages.error(request, "Error updating the category.")
+            
+    context = {
+        "category_form": category_form
+    }
+    return render(request,"dashboard/category_form.html", context)
 
 
 """ Delete Category """
@@ -158,10 +135,10 @@ def delete_category(request, id):
         category.delete()
         
         messages.success(request, "Category Deleted Successfully")
-        return redirect('delete_category')
+        return redirect('manager_dashboard')
     else:
         messages.error(request, "Something Wrong")
-        return redirect('delete_category')
+        return redirect('manager_dashboard')
 
 """ view Category List """
 def view_category_list(request):
@@ -193,13 +170,18 @@ def update_participant(request, id):
         participant_form = ParticipantModelForm(request.POST, instance=participant)
 
         if participant_form.is_valid():
-            category = participant_form.save()
+            participant_form.save()
 
             messages.success(request, "Participant Updated Successfully")
             return redirect('update_participant', id=id)
         else:
             print(participant_form.errors)
             messages.error(request, "Error updating the Participant.")
+            
+    context = {
+        "participant_form": participant_form
+    }
+    return render(request,"dashboard/participant_form.html", context)
 
 
 
@@ -210,10 +192,10 @@ def delete_participant(request, id):
         participant.delete()
         
         messages.success(request, "Participant Deleted Successfully")
-        return redirect('delete_participant')
+        return redirect('manager_dashboard')
     else:
         messages.error(request, "Something Wrong")
-        return redirect('delete_participant')
+        return redirect('manager_dashboard')
     
 
 """ view Participant List """
@@ -229,27 +211,25 @@ def delete_participant(request, id):
     # return render(request, "dashboard/manager_dashboard.html", context)
 
 
-
-# def manager_dashboard(request):
-#     return render(request, "dashboard/manager_dashboard.html")
-
 def manager_dashboard(request):
     type = request.GET.get('type','today')
     current_date = datetime.now().date()
     current_time = datetime.now().time()
 
-    participant_counts = Participant.objects.aggregate(
-        total = Count('id')
+    participant_counts = Event.objects.aggregate(
+        total_participant = Count('participants', distinct=True)
     )
     
     counts = Event.objects.aggregate(
         total=Count('id'),
+        # total_participant = Count('participants', distinct=True),
         past_events=Count('id', filter=Q(date__lt=current_date) | Q(date=current_date, time__lt=current_time)),
         upcoming_events=Count('id', filter=Q(date__gt=current_date)  | Q(date=current_date, time__gte=current_time)),
     )
 
-    base_query = Event.objects.select_related(
-        'location')
+    base_query = Event.objects
+    
+
 
     if type == 'past_event':
         events = base_query.filter(date__lt=current_date) | base_query.filter(date=current_date, time__lt=current_time)
@@ -264,14 +244,15 @@ def manager_dashboard(request):
         events = base_query.all()
         event_type = "All Events"
         
-    # events = Event.objects.filter(
-    #     Q(date=current_date, time__gte=current_time)
-    # )
+    participant = Participant.objects.all()
+    cetagory = Category.objects.all()
     context = {
         "events": events,
         "counts": counts,
         "event_type": event_type,
-        "participant_counts": participant_counts
+        "participant_counts": participant_counts,
+        "participant" : participant,
+        "cetagory": cetagory
     }
     return render(request, "dashboard/manager_dashboard.html", context)
 
@@ -290,8 +271,14 @@ def event_detaile(request, id):
 
 
 def events(request):
+    input = request.GET.get('q')
     events = Event.objects.select_related('location','category').prefetch_related('participants').annotate(participant_count=Count('participants')).all()
+    if input:
+        events = events.filter(
+            Q(name__icontains=input) | Q(location__city__icontains=input) | Q(location__country__icontains=input)
+        )
     context = {
-        "events": events
+        "events": events,
+        "search_result": input
     }
     return render(request, "dashboard/events.html", context)

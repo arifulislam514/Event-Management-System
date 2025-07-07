@@ -4,18 +4,16 @@
 
 {% block content %}
 
-    <div class="grid grid-cols-12 gap-4 my-8">
-        <div class="bg-white col-span-8 rounded-lg p-10">
+    <div class="grid grid-cols-12 gap-4 my-8 items-start">
+        <div class="bg-white col-span-12 lg:col-span-8 sm:col-span-8 rounded-lg lg:p-10 sm:p-10 p-5">
             <img class="w-full max-h-96 mb-5  rounded-lg" src="{% static 'images/event.jpg' %}" alt="img">
             <h1 class="font-bold text-4xl mb-4">Event Information</h1>
             <p class="text-base/7">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus autem error animi ea. Sunt vitae adipisci qui ipsa quae voluptatem dolor! Dignissimos doloribus qui nesciunt reiciendis repellat impedit at ad? Corrupti hic consequatur, alias praesentium voluptas aliquam ad quidem magnam officia doloremque nemo similique vero, nulla quas modi maxime! Similique sint qui eos ipsam laudantium deserunt et? Voluptates voluptatem nisi natus tenetur odio harum quisquam asperiores sit, corrupti quidem assumenda animi distinctio veniam, sunt eaque delectus? Aut reiciendis obcaecati officia?</p>
         
         </div>
-        <div class="bg-white col-span-4 rounded-lg p-10 font-serif text-base/10">
-            <div class="flex justify-between">
-                <p><span class="font-semibold">Date : </span>{{events.date}}</p>
-                <p><span class="font-semibold">Time : </span>{{events.time}}</p>
-            </div>
+        <div class="bg-white col-span-12 lg:col-span-4 sm:col-span-4 rounded-lg lg:p-10 sm:p-10 p-5 font-serif text-base/10">
+            <p><span class="font-semibold">Date : </span>{{events.date}}</p>
+            <p><span class="font-semibold">Time : </span>{{events.time}}</p>
             <p><span class="font-semibold">Category : </span>{{events.category}}</p>
             <p><span class="font-semibold">Location : </span>{{events.location.city}},{{events.location.country}}</p>
             <p><span class="font-semibold">Participant : </span></p>
@@ -26,16 +24,5 @@
         </div>
     </div>
     
-
-
-
-
-
-
-
-
-
-
-
 
 {% endblock content %}

@@ -30,7 +30,6 @@
                     <div class="flex items-center justify-between"><!--  sub div  -->
                         <div>
                             <p class=" font-semibold text-3xl mt-3">{{counts.total}}</p>
-                            <p class=" text-gray-500">11 last month</p>
                         </div>
                         <div class=" rounded-full bg-blue-200 p-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -49,7 +48,6 @@
                     <div class="flex items-center justify-between"><!--  sub div  -->
                         <div>
                             <p class=" font-semibold text-3xl mt-3">{{counts.past_events}}</p>
-                            <p class=" text-gray-500">11 last month</p>
                         </div>
                         <div class=" rounded-full bg-green-200 p-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -69,7 +67,6 @@
                     <div class="flex items-center justify-between"><!--  sub div  -->
                         <div>
                             <p class=" font-semibold text-3xl mt-3">{{counts.upcoming_events}}</p>
-                            <p class=" text-gray-500">11 last month</p>
                         </div>
                         <div class=" rounded-full bg-yellow-200 p-3">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -83,34 +80,36 @@
                 </div>
             </a>
             <!-- TODOS  -->
-            <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
-                <p class=" text-gray-500">Participants</p>
-                <div class="flex items-center justify-between"><!--  sub div  -->
-                    <div>
-                        <h3 class=" font-semibold text-3xl mt-3">{{participant_counts.total}}</h3>
-                        <p class=" text-gray-500">11 last month</p>
-                    </div>
-                    <div class=" rounded-full bg-fuchsia-200 p-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="size-5 text-fuchsia-700">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
-                        </svg>
+             {% comment %} <a href="{% url 'add_participant' %}"> {% endcomment %}
+              <a href="#">
+                <div class=" bg-white rounded-lg shadow-md p-5"> <!--  main div  -->
+                    <p class=" text-gray-500">Participants</p>
+                    <div class="flex items-center justify-between"><!--  sub div  -->
+                        <div>
+                            <h3 class=" font-semibold text-3xl mt-3">{{participant_counts.total_participant}}</h3>
+                        </div>
+                        <div class=" rounded-full bg-fuchsia-200 p-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="size-5 text-fuchsia-700">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
 
         <!-- Task List  -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"> <!-- Main Div -->
-            <div class="bg-white rounded-lg shadow-md p-5"> <!-- Today Task  -->
+        <div class="grid grid-cols-12 gap-6"> <!-- Main Div -->
+            <div class="col-span-12 lg:col-span-6 sm:col-span-6 bg-white rounded-lg shadow-md p-5"> <!-- Today Task  -->
                 <div class="flex justify-between">
                     <span class=" text-lg font-bold">{{event_type}}</span>
                     <a href="{% url 'create_event' %}" class="px-2 py-1 bg-blue-400 hover:bg-blue-600 font-semibold text-white rounded-sm">ADD</a>
 
                 </div>
                 <!-- Task List  -->
-                <div class="grid grid-cols-3 gap-3 my-2"> <!-- Tas Head -->
+                <div class="grid font-semibold grid-cols-3 gap-3 my-2"> <!-- Tas Head -->
                     <span>NAME</span>
                     <span>DATE</span>
                     <span>TIME</span>
@@ -122,7 +121,7 @@
                     <div class="grid grid-cols-3 items-center gap-3 mb-2">
                         {% comment %} Event Name {% endcomment %}
                         <div class="flex items-center gap-4">
-                            <div class="h-2 w-2 rounded-full bg-green-600"></div>
+                            <div class="h-2 w-2 rounded-full bg-blue-400"></div>
                             <span >{{event.name}}</span>
                         </div>
                         {% comment %} Date {% endcomment %}
@@ -131,10 +130,17 @@
                             <span>{{event.time}}</span>
                             {% comment %} Edit And Delete Option {% endcomment %}
                             <div class="flex gap-1">
-                                <a href='{% url "update_event" event.id %}' class="px-2 py-1 bg-green-500">Edit</a>
+                                <a href='{% url "update_event" event.id %}'>
+                                    <svg class="size-6 fill-blue-400 hover:fill-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                        <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+                                    </svg>
+                                </a>
                                 <form action='{% url "delete_event" event.id %}' method='POST'>
                                     {% csrf_token %}
-                                    <button type='submit' class="px-2 py-1 bg-red-500">Delete</button>
+                                    <button type='submit'>
+                                        <svg class="size-6 fill-red-400 hover:fill-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                            <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -143,20 +149,66 @@
 
                 {% endfor %}
             </div>
-            <div class="bg-white rounded-lg shadow-md p-5"> <!-- All Task  -->
-                <div class="flex justify-between items-center">
-                    <span class="text-lg font-bold">All Tasks</span>
-                    <div class="mx-3 flex gap-3">
-                        <a href="{% url 'create_event' %}" class="px-2 py-1 bg-blue-400 hover:bg-blue-600 font-semibold text-white rounded-sm">ADD</a>
-                        <a href="#" class="px-2 py-1 bg-red-400 hover:bg-red-600 font-semibold text-white rounded-sm">DELETE</a>
-                    </div>
+            <div class="bg-white col-span-12 lg:col-span-3 sm:col-span-6 rounded-lg shadow-md p-5"> <!-- Participants  -->
+                <div class="flex justify-between">
+                    <p class=" text-lg font-bold mb-3">All Participants</p>
+                    <a href="{% url 'add_participant' %}" class="px-2 py-1 mb-3 bg-blue-400 hover:bg-blue-600 font-semibold text-white rounded-sm">ADD</a>
                 </div>
-                
-
-
-
 
                 
+                {% for participant in participant %}
+                    <div class="flex justify-between mb-2">
+                        <div class="flex items-center">
+                            <div class="h-2 w-2 mr-2 rounded-full bg-blue-400"></div>
+                            <span class="font-serif">{{participant.name}}</span>
+                        </div>
+                        <div class="flex justify-around gap-2">
+                            <a href='{% url "update_participant" participant.id %}'>
+                                <svg class="size-6 fill-blue-400 hover:fill-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+                                </svg>
+                            </a>
+                            <form action='{% url "delete_participant" participant.id %}' method='POST'>
+                                {% csrf_token %}
+                                <button type='submit'>
+                                    <svg class="size-6 fill-red-400 hover:fill-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            </div>
+            <div class="bg-white col-span-12 lg:col-span-3 sm:col-span-6 rounded-lg shadow-md p-5"> <!-- Category  -->
+                <div class="flex justify-between">
+                    <p class=" text-lg font-bold mb-3">All Cetagorys</p>
+                    <a href="{% url 'create_category' %}" class="px-2 py-1 bg-blue-400 hover:bg-blue-600 mb-3 font-semibold text-white rounded-sm">ADD</a>
+                </div>
+
+                {% for cetagory in cetagory %}
+                    <div class="flex justify-between mb-2">
+                        <div class="flex items-center">
+                            <div class="h-2 w-2 mr-2 rounded-full bg-blue-400"></div>
+                            <span class="font-serif">{{cetagory.name}}</span>
+                        </div>
+                        <div class="flex justify-around gap-1">
+                            <a href='{% url "update_category" cetagory.id %}'>
+                                <svg class="size-6 fill-blue-400 hover:fill-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                    <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
+                                </svg>
+                            </a>
+                            <form action='{% url "delete_category" cetagory.id %}' method='POST'>
+                                {% csrf_token %}
+                                <button type='submit'>
+                                    <svg class="size-6 fill-red-400 hover:fill-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                        <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
         </div>
     </main>

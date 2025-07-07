@@ -2,7 +2,7 @@
 {% block title %}Event{% endblock title %}
 
 {% block content %}
-<div class="w-1/2 mx-auto mt-8">
+    <div class="w-90 lg:w-6/12 sm:w-8/12 mx-auto mt-8">
         <div>
             {% if messages %}
                 {% for message in messages %}
@@ -11,10 +11,10 @@
             {% endif %}
         </div>
         <form method="POST" class="bg-white p-5">
-            
+                
             {% csrf_token %}
             {{ event_form }}
-            {{ event_location_form }}
+            {{ location_form }}
             <button type="submit" class="mb-5 bg-blue-400 hover:bg-blue-600 px-3 py-2 text-white mt-2 rounded-md">Submit</button>
         </form>
     </div>

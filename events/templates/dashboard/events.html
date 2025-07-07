@@ -4,21 +4,33 @@
 
 {% block content %}
 <main>
+    <form action="{% url 'events' %}" method="GET">
+        <input type="text" name="q" placeholder="Search event or location" class="bg-white my-5 p-3 w-80 rounded-lg focus:outline-blue-600">
+        <button type="submit" class="ml-2 p-3 rounded-lg bg-blue-400 hover:bg-blue-600">Search</button>
+    </form>
     {% comment %} event cart  {% endcomment %}
     <div class="grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-6 mb-8">
-        {% for event in events %}
-            <a href='{% url "event_detaile" event.id %}'>
-                <div class=" bg-white rounded-lg shadow-md p-5 mt-8">
-                    <div class="mb-4">
-                        <img class="h-48 w-full rounded-lg" src="{% static 'images/event.jpg' %}" alt="img">
+        {% if events %}
+            {% for event in events %}
+                <a href='{% url "event_detaile" event.id %}'>
+                    <div class=" bg-white rounded-lg shadow-md p-5 mt-8">
+                        <div class="mb-4">
+                            <img class="h-48 w-full rounded-lg" src="{% static 'images/event.jpg' %}" alt="img">
+                        </div>
+                        <p class="font-semibold text-lg">{{event.name}}</p>
+                        <p>{{event.description}}</p>
+                        <p><span class="font-semibold">Category : </span> {{event.category}}</p>
+                        <p><span class="font-semibold">Participant : </span> {{event.participant_count}}</p>
                     </div>
-                    <p class="font-semibold text-lg">{{event.name}}</p>
-                    <p>{{event.description}}</p>
-                    <p><span class="font-semibold">Category : </span> {{event.category}}</p>
-                    <p><span class="font-semibold">Participant : </span> {{event.participant_count}}</p>
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        {% else %}
+            <div class="flex w-full h-96 justify-center p-auto">
+                <p class="font-serif text-xl">No Result Found</p>
+            </div>
+        {% endif %}
+        
+        
         
         
 
