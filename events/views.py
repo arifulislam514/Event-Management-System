@@ -5,7 +5,18 @@ from events.forms import EventModelForm, CategoryModelForm, LocationModelForm
 from django.contrib import messages
 from django.db.models import Q, Count, Max, Min, Avg
 from datetime import time, datetime
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
+from users.views import is_admin
+from django.core.mail import send_mail
+from django.conf import settings
 
+
+def is_manager(user):
+    return user.groups.filter(name='Manager').exists()
+
+def is_Participant(user):
+    return user.groups.filter(name='Participant').exists()
 
 """ Create Event """
 def create_event(request):
@@ -34,15 +45,15 @@ def create_event(request):
 def update_event(request, id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance=event)
-    event_location_form = LocationModelForm(instance=event.location)if event.location else LocationModelForm()
+    location_form = LocationModelForm(instance=event.location)if event.location else LocationModelForm()
 
     if request.method == "POST":
         event_form = EventModelForm(request.POST, instance=event)
-        event_location_form = LocationModelForm(request.POST, instance=event.location)if event.location else LocationModelForm(request.POST)
+        location_form = LocationModelForm(request.POST, instance=event.location)if event.location else LocationModelForm(request.POST)
 
-        if event_form.is_valid() and event_location_form.is_valid():
+        if event_form.is_valid() and location_form.is_valid():
             event = event_form.save()
-            event_location = event_location_form.save(commit=False)
+            event_location = location_form.save(commit=False)
             event_location.event = event
             event_location.save()
 
@@ -50,12 +61,12 @@ def update_event(request, id):
             return redirect('update_event', id=id)
         else:
             print(event_form.errors)
-            print(event_location_form.errors)
+            print(location_form.errors)
             messages.error(request, "Error updating the event.")
 
     context = {
         "event_form": event_form,
-        "event_location_form": event_location_form
+        "location_form": location_form
     }
     return render(request, "dashboard/event_form.html", context)
 
@@ -146,56 +157,56 @@ def view_category_list(request):
     return render(request, "dashboard/manager_dashboard.html", {"category": category})
 
 
-""" Add Participant """
-def add_participant(request):
-    participant_form = ParticipantModelForm()
-    if request.method == "POST":
-        participant_form = ParticipantModelForm(request.POST)
+# """ Add Participant """
+# def add_participant(request):
+#     participant_form = ParticipantModelForm()
+#     if request.method == "POST":
+#         participant_form = ParticipantModelForm(request.POST)
         
-        if participant_form.is_valid():
-            participant_form.save()
+#         if participant_form.is_valid():
+#             participant_form.save()
             
-            messages.success(request,"Participant Added Successfully")
-            return redirect('add_participant')
+#             messages.success(request,"Participant Added Successfully")
+#             return redirect('add_participant')
         
-    context = {"participant_form": participant_form}
-    return render(request, "dashboard/participant_form.html", context)
+#     context = {"participant_form": participant_form}
+#     return render(request, "dashboard/participant_form.html", context)
 
 
-""" Update Participant """
-def update_participant(request, id):
-    participant = Participant.objects.get(id=id)
-    participant_form = ParticipantModelForm(instance=participant)
-    if request.method == "POST":
-        participant_form = ParticipantModelForm(request.POST, instance=participant)
+# """ Update Participant """
+# def update_participant(request, id):
+#     participant = Participant.objects.get(id=id)
+#     participant_form = ParticipantModelForm(instance=participant)
+#     if request.method == "POST":
+#         participant_form = ParticipantModelForm(request.POST, instance=participant)
 
-        if participant_form.is_valid():
-            participant_form.save()
+#         if participant_form.is_valid():
+#             participant_form.save()
 
-            messages.success(request, "Participant Updated Successfully")
-            return redirect('update_participant', id=id)
-        else:
-            print(participant_form.errors)
-            messages.error(request, "Error updating the Participant.")
+#             messages.success(request, "Participant Updated Successfully")
+#             return redirect('update_participant', id=id)
+#         else:
+#             print(participant_form.errors)
+#             messages.error(request, "Error updating the Participant.")
             
-    context = {
-        "participant_form": participant_form
-    }
-    return render(request,"dashboard/participant_form.html", context)
+#     context = {
+#         "participant_form": participant_form
+#     }
+#     return render(request,"dashboard/participant_form.html", context)
 
 
 
-""" Delete Participant """
-def delete_participant(request, id):
-    if request.method == 'POST':
-        participant = Participant.objects.get(id=id)
-        participant.delete()
+# """ Delete Participant """
+# def delete_participant(request, id):
+#     if request.method == 'POST':
+#         participant = Participant.objects.get(id=id)
+#         participant.delete()
         
-        messages.success(request, "Participant Deleted Successfully")
-        return redirect('manager_dashboard')
-    else:
-        messages.error(request, "Something Wrong")
-        return redirect('manager_dashboard')
+#         messages.success(request, "Participant Deleted Successfully")
+#         return redirect('manager_dashboard')
+#     else:
+#         messages.error(request, "Something Wrong")
+#         return redirect('manager_dashboard')
     
 
 """ view Participant List """
@@ -216,21 +227,18 @@ def manager_dashboard(request):
     current_date = datetime.now().date()
     current_time = datetime.now().time()
 
-    participant_counts = Event.objects.aggregate(
-        total_participant = Count('participants', distinct=True)
+    user_counts = Event.objects.aggregate(
+        total_user = Count('participants', distinct=True)
     )
     
     counts = Event.objects.aggregate(
         total=Count('id'),
-        # total_participant = Count('participants', distinct=True),
         past_events=Count('id', filter=Q(date__lt=current_date) | Q(date=current_date, time__lt=current_time)),
         upcoming_events=Count('id', filter=Q(date__gt=current_date)  | Q(date=current_date, time__gte=current_time)),
     )
 
     base_query = Event.objects
     
-
-
     if type == 'past_event':
         events = base_query.filter(date__lt=current_date) | base_query.filter(date=current_date, time__lt=current_time)
         event_type = "Past Events"
@@ -244,17 +252,20 @@ def manager_dashboard(request):
         events = base_query.all()
         event_type = "All Events"
         
-    participant = Participant.objects.all()
+    all_user = User.objects.filter(events__isnull=False).distinct()
     cetagory = Category.objects.all()
     context = {
         "events": events,
         "counts": counts,
         "event_type": event_type,
-        "participant_counts": participant_counts,
-        "participant" : participant,
-        "cetagory": cetagory
+        "users" : all_user,
+        "cetagory": cetagory,
+        "participant_counts": user_counts
     }
     return render(request, "dashboard/manager_dashboard.html", context)
+
+def user_dashboard(request):
+    return render(request,'dashboard/user_dashboard.html')
 
 
 def home(request):
@@ -282,3 +293,27 @@ def events(request):
         "search_result": input
     }
     return render(request, "dashboard/events.html", context)
+
+@login_required
+def dashboard(request):
+    if is_admin(request.user):
+        return redirect('admin-dashboard')
+    elif is_manager(request.user):
+        return redirect('manager_dashboard')
+    elif is_Participant(request.user):
+        return redirect('user-dashboard')
+    
+    return redirect('no-permission')
+
+@login_required
+def rsvp_event(request, id):
+    event = Event.objects.get(id=id)
+    user = request.user
+    
+    if user in event.participants.all():
+        messages.info(request, "You already booked this event")
+        return redirect('events')
+    else:
+        event.participants.add(user)
+        messages.success(request, "Booked Successfull")
+        return redirect('events')
