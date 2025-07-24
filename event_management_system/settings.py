@@ -165,6 +165,6 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # FRONTEND_URL = 'http://127.0.0.1:8000'
 
 # render url 
-FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
+FRONTEND_URL = 'https://event-management-system-v2.onrender.com'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
