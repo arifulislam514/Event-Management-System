@@ -16,6 +16,14 @@
                 {% endfor %}
             {% endif %}
 
+            {% if form.non_field_errors %}
+                <div class="px-8 pt-5 mb-4 text-sm text-red-600">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <form method='POST' class="py-6 px-8">
                 {% csrf_token %}
                 {% for field in form %}
