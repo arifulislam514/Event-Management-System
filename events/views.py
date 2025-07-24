@@ -95,6 +95,7 @@ def delete_event(request, id):
 
 
 """ view Event count by Category """
+@login_required
 def view_event_count(request):
     category = Category.objects.annotate(
         num_event = Count('event')).order_by('num_event')
@@ -102,6 +103,7 @@ def view_event_count(request):
 
 
 """ view Event List """
+@login_required
 def view_event_list(request):
     events = Event.objects.all().order_by('-date')
     return render(request, "dashboard/manager_dashboard.html", {"events": events})
@@ -165,6 +167,7 @@ def delete_category(request, id):
         return redirect('manager_dashboard')
 
 """ view Category List """
+@login_required
 def view_category_list(request):
     category = Category.objects.all()
     return render(request, "dashboard/manager_dashboard.html", {"category": category})
@@ -210,6 +213,7 @@ def view_category_list(request):
 
 
 """ Delete Participant """
+@login_required
 def delete_participant(request, id):
     if request.method == 'POST':
         participant = User.objects.get(id=id)
@@ -293,6 +297,7 @@ def user_dashboard(request):
 def home(request):
     return render(request, "dashboard/home.html")
 
+@login_required
 def event_detaile(request, id):
     events = Event.objects.select_related('location', 'category').prefetch_related('participants').get(id=id)
     print(events)
@@ -303,6 +308,7 @@ def event_detaile(request, id):
     return render(request, "dashboard/event_detaile.html", context)
 
 
+@login_required
 def events(request):
     input = request.GET.get('q')
     events = Event.objects.select_related('location','category').prefetch_related('participants').annotate(participant_count=Count('participants')).all()

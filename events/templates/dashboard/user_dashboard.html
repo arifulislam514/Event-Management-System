@@ -10,7 +10,7 @@
                 <div class="bg-white rounded-lg shadow-md p-5 mt-8">
                     <a href="{% url 'event_detaile' event.id %}">
                         <div class="mb-4">
-                            <img class="h-48 w-full rounded-lg" src="{% static 'images/event.jpg' %}" alt="img">
+                            <img class="h-48 w-full rounded-lg" src="{{event.event_asset.url}}" alt="img">
                         </div>
                     </a>
                     <div>

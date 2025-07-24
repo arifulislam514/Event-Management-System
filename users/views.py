@@ -154,7 +154,7 @@ def create_group(request):
     return render(request, 'admin/create_group.html', {'group_form': group_form})
 
 
-# @user_passes_test(is_admin, login_url='no-permission')
+@user_passes_test(is_admin, login_url='no-permission')
 def update_group(request, id):
     group = Group.objects.get(id=id)
     group_form = CreateGroupForm(instance=group)
@@ -183,7 +183,7 @@ def delete_group(request, id):
 
 
 
-# @user_passes_test(is_admin, login_url='no-permission')
+@user_passes_test(is_admin, login_url='no-permission')
 def group_list(request):
     groups = Group.objects.prefetch_related('permissions').all()
     return render(request, 'admin/group_list.html', {'groups': groups})

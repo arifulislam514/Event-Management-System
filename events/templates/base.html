@@ -21,7 +21,11 @@
   <!-- Navigation Bar For Login User  -->
 
   {% if request.user.is_authenticated %}
-    {% include "login/login_nav.html" %}
+    {% if request.user.is_superuser %}
+      {% include "admin/admin_nav.html" %}
+    {% else %}
+      {% include "login/login_nav.html" %}
+    {% endif %}
   {% else %}
     {% include "login/non_login_nav.html" %}
   {% endif %}
@@ -41,9 +45,9 @@
       <div class="container mx-auto px-6">
         <div class="flex flex-wrap justify-between">
           <div class="w-full md:w-1/4 mb-8 md:mb-0">
-            <h3 class="text-lg font-semibold mb-4">TaskMaster</h3>
+            <h3 class="text-lg font-semibold mb-4">EventManager</h3>
             <p class="text-gray-400">
-              Empowering teams with efficient task management solutions.
+              Empowering teams with efficient event management solutions.
             </p>
           </div>
           <div class="w-full md:w-1/4 mb-8 md:mb-0">
@@ -84,7 +88,7 @@
         <div
           class="border-t border-gray-700 mt-12 pt-8 text-sm text-center text-gray-400"
         >
-          &copy; 2023 TaskMaster. All rights reserved.
+          &copy; 2023 EventManager. All rights reserved.
         </div>
       </div>
     </footer>
