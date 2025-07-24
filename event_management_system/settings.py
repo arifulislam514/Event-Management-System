@@ -85,25 +85,25 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 # }
 
 # Render Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default='postgresql://event_manager_db_077m_user:dELMJGJLpyoHSqKa7FsjaW3HKOVe0b8h@dpg-d1m02undiees73888jug-a.oregon-postgres.render.com/event_manager_db_077m',
-#         conn_max_age=600
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_manager_db_077m_user:dELMJGJLpyoHSqKa7FsjaW3HKOVe0b8h@dpg-d1m02undiees73888jug-a.oregon-postgres.render.com/event_manager_db_077m',
+        conn_max_age=600
+    )
+}
 
 # LocalHost DataBase
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default=''),
-        'USER': config('DB_USER', default=''),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
-        'PORT': config('DB_PORT', cast=int)
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default=''),
+#         'USER': config('DB_USER', default=''),
+#         'PASSWORD': config('DB_PASSWORD', default=''),
+#         'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
+#         'PORT': config('DB_PORT', cast=int)
+#     }
+# }
 
 
 # Password validation
