@@ -7,7 +7,9 @@ from django.contrib import messages
 from users.forms import LoginForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count, Q
+from datetime import time, datetime
+from events.views import Event, Category
 
 
 def is_admin(user):
@@ -65,18 +67,60 @@ def activate_user(request, user_id, token):
 
 @user_passes_test(is_admin, login_url='no-permission')
 def admin_dashboard(request):
+    type = request.GET.get('type','today')
+    current_date = datetime.now().date()
+    current_time = datetime.now().time()
+
+    user_counts = Event.objects.aggregate(
+        total_user = Count('participants', distinct=True)
+    )
+    
+    counts = Event.objects.aggregate(
+        total=Count('id'),
+        past_events=Count('id', filter=Q(date__lt=current_date) | Q(date=current_date, time__lt=current_time)),
+        upcoming_events=Count('id', filter=Q(date__gt=current_date)  | Q(date=current_date, time__gte=current_time)),
+    )
+
+    base_query = Event.objects
+    
+    if type == 'past_event':
+        events = base_query.filter(date__lt=current_date) | base_query.filter(date=current_date, time__lt=current_time)
+        event_type = "Past Events"
+    elif type == 'upcoming_event':
+        events = base_query.filter(date__gt=current_date)  | base_query.filter(date=current_date, time__gte=current_time)
+        event_type = "Upcoming Events"
+    elif type == 'today':
+        events = base_query.filter(date=current_date, time__gte=current_time)
+        event_type = "Today Events"
+    elif type == 'all':
+        events = base_query.all()
+        event_type = "All Events"
+        
+    all_user = User.objects.filter(events__isnull=False).distinct()
+    cetagory = Category.objects.all()
+    context = {
+        "events": events,
+        "counts": counts,
+        "event_type": event_type,
+        "users" : all_user,
+        "cetagory": cetagory,
+        "participant_counts": user_counts
+    }
+    return render(request, "admin/admin_cart.html", context)
+
+
+@user_passes_test(is_admin, login_url='no-permission')
+def user_list(request):
     users = User.objects.prefetch_related(
         Prefetch('groups', queryset=Group.objects.all(), to_attr='all_groups')
     ).all()
-
-    print(users)
 
     for user in users:
         if user.all_groups:
             user.group_name = user.all_groups[0].name
         else:
             user.group_name = 'No Group Assigned'
-    return render(request, 'admin/admin_dashboard.html', {"users": users})
+    return render(request, 'login/user_list.html', {"users": users})
 
 
 @user_passes_test(is_admin, login_url='no-permission')
@@ -96,7 +140,7 @@ def assign_role(request, user_id):
     return render(request, 'admin/assign_role.html', {"form": form})
 
 
-# @user_passes_test(is_admin, login_url='no-permission')
+@user_passes_test(is_admin, login_url='no-permission')
 def create_group(request):
     group_form = CreateGroupForm()
     if request.method == 'POST':
@@ -105,7 +149,7 @@ def create_group(request):
         if group_form.is_valid():
             group = group_form.save()
             messages.success(request, f"Group {group.name} has been created successfully")
-            return redirect('create-group')
+            return redirect('group-list')
 
     return render(request, 'admin/create_group.html', {'group_form': group_form})
 
@@ -120,9 +164,22 @@ def update_group(request, id):
         if group_form.is_valid():
             group = group_form.save()
             messages.success(request, f"Group {group.name} has been updated successfully")
-            return redirect('update-group', id=id)
+            return redirect('group-list')
 
     return render(request, 'admin/create_group.html', {'group_form': group_form})
+
+
+@user_passes_test(is_admin, login_url='no-permission')
+def delete_group(request, id):
+    if request.method == 'POST':
+        group = Group.objects.get(id=id)
+        group.delete()
+        
+        messages.success(request, f"Group {group.name} has been deleted successfully")
+        return redirect('group-list')
+    else:
+        messages.error(request,"Somthing wrong")
+        return redirect(request, 'group-list')
 
 
 

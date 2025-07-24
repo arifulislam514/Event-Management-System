@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q, Count, Max, Min, Avg
 from datetime import time, datetime
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 from users.views import is_admin
 from django.core.mail import send_mail
@@ -19,6 +20,8 @@ def is_Participant(user):
     return user.groups.filter(name='Participant').exists()
 
 """ Create Event """
+@login_required
+@permission_required("events.add_event", login_url="no-permission")
 def create_event(request):
     event_form = EventModelForm()
     location_form = LocationModelForm()
@@ -42,6 +45,8 @@ def create_event(request):
 
 
 """ Update Event """
+@login_required
+@permission_required("events.change_event", login_url="no-permission")
 def update_event(request, id):
     event = Event.objects.get(id=id)
     event_form = EventModelForm(instance=event)
@@ -74,6 +79,8 @@ def update_event(request, id):
 
 
 """ Delete Event """
+@login_required
+@permission_required("events.delete_event", login_url="no-permission")
 def delete_event(request, id):
     if request.method == 'POST':
         event = Event.objects.get(id=id)
@@ -101,6 +108,8 @@ def view_event_list(request):
 
 
 """ Create Category """
+@login_required
+@permission_required("events.add_category", login_url="no-permission")
 def create_category(request):
     category_form = CategoryModelForm()
     
@@ -118,6 +127,8 @@ def create_category(request):
 
 
 """ Update Category """
+@login_required
+@permission_required("events.change_category", login_url="no-permission")
 def update_category(request, id):
     category = Category.objects.get(id=id)
     category_form = CategoryModelForm(instance=category)
@@ -140,6 +151,8 @@ def update_category(request, id):
 
 
 """ Delete Category """
+@login_required
+@permission_required("events.delete_category", login_url="no-permission")
 def delete_category(request, id):
     if request.method == 'POST':
         category = Category.objects.get(id=id)
@@ -159,9 +172,9 @@ def view_category_list(request):
 
 # """ Add Participant """
 # def add_participant(request):
-#     participant_form = ParticipantModelForm()
+#     participant_form = UserCreationForm()
 #     if request.method == "POST":
-#         participant_form = ParticipantModelForm(request.POST)
+#         participant_form = UserCreationForm(request.POST)
         
 #         if participant_form.is_valid():
 #             participant_form.save()
@@ -196,17 +209,17 @@ def view_category_list(request):
 
 
 
-# """ Delete Participant """
-# def delete_participant(request, id):
-#     if request.method == 'POST':
-#         participant = Participant.objects.get(id=id)
-#         participant.delete()
+""" Delete Participant """
+def delete_participant(request, id):
+    if request.method == 'POST':
+        participant = User.objects.get(id=id)
+        participant.delete()
         
-#         messages.success(request, "Participant Deleted Successfully")
-#         return redirect('manager_dashboard')
-#     else:
-#         messages.error(request, "Something Wrong")
-#         return redirect('manager_dashboard')
+        messages.success(request, "Participant Deleted Successfully")
+        return redirect('admin_dashboard')
+    else:
+        messages.error(request, "Something Wrong")
+        return redirect('admin_dashboard')
     
 
 """ view Participant List """
@@ -222,6 +235,7 @@ def view_category_list(request):
     # return render(request, "dashboard/manager_dashboard.html", context)
 
 
+@user_passes_test(is_manager, login_url='no-permission')
 def manager_dashboard(request):
     type = request.GET.get('type','today')
     current_date = datetime.now().date()
@@ -264,8 +278,16 @@ def manager_dashboard(request):
     }
     return render(request, "dashboard/manager_dashboard.html", context)
 
+
+@user_passes_test(is_Participant, login_url='no-permission')
 def user_dashboard(request):
-    return render(request,'dashboard/user_dashboard.html')
+    user = request.user
+    events = Event.objects.filter(participants=user)
+    contex = {
+        "user":user,
+        "events":events
+    }
+    return render(request,'dashboard/user_dashboard.html',contex)
 
 
 def home(request):
@@ -306,6 +328,7 @@ def dashboard(request):
     return redirect('no-permission')
 
 @login_required
+@user_passes_test(is_Participant, login_url='no-permission')
 def rsvp_event(request, id):
     event = Event.objects.get(id=id)
     user = request.user
@@ -317,3 +340,4 @@ def rsvp_event(request, id):
         event.participants.add(user)
         messages.success(request, "Booked Successfull")
         return redirect('events')
+

@@ -18,7 +18,7 @@
             <p><span class="font-semibold">Location : </span>{{events.location.city}},{{events.location.country}}</p>
             <p><span class="font-semibold">Participant : </span></p>
             {% for participant in events.participants.all %}
-                <p class="ml-10">{{participant.name}}</p>
+                <p class="ml-10">{{participant.username}}</p>
             {% endfor %}
 
         </div>
