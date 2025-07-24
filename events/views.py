@@ -27,7 +27,7 @@ def create_event(request):
     location_form = LocationModelForm()
     
     if request.method == "POST":
-        event_form = EventModelForm(request.POST)
+        event_form = EventModelForm(request.POST, request.FILES)
         location_form = LocationModelForm(request.POST)
         
         if event_form.is_valid() and location_form.is_valid():

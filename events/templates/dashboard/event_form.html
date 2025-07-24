@@ -10,7 +10,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <form method="POST" class="bg-white p-5">
+        <form method="POST" enctype='multipart/form-data' class="bg-white p-5">
                 
             {% csrf_token %}
             {{ event_form }}

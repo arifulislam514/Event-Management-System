@@ -22,6 +22,7 @@ class Category(models.Model):
 
 """ Event M0del """
 class Event(models.Model):
+    event_asset = models.ImageField(upload_to='event_assect', blank=True, null=True, default="event_assect/default.jpg")
     name = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)
     date = models.DateField()
