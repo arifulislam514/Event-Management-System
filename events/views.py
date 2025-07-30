@@ -173,45 +173,6 @@ def view_category_list(request):
     return render(request, "dashboard/manager_dashboard.html", {"category": category})
 
 
-# """ Add Participant """
-# def add_participant(request):
-#     participant_form = UserCreationForm()
-#     if request.method == "POST":
-#         participant_form = UserCreationForm(request.POST)
-        
-#         if participant_form.is_valid():
-#             participant_form.save()
-            
-#             messages.success(request,"Participant Added Successfully")
-#             return redirect('add_participant')
-        
-#     context = {"participant_form": participant_form}
-#     return render(request, "dashboard/participant_form.html", context)
-
-
-# """ Update Participant """
-# def update_participant(request, id):
-#     participant = Participant.objects.get(id=id)
-#     participant_form = ParticipantModelForm(instance=participant)
-#     if request.method == "POST":
-#         participant_form = ParticipantModelForm(request.POST, instance=participant)
-
-#         if participant_form.is_valid():
-#             participant_form.save()
-
-#             messages.success(request, "Participant Updated Successfully")
-#             return redirect('update_participant', id=id)
-#         else:
-#             print(participant_form.errors)
-#             messages.error(request, "Error updating the Participant.")
-            
-#     context = {
-#         "participant_form": participant_form
-#     }
-#     return render(request,"dashboard/participant_form.html", context)
-
-
-
 """ Delete Participant """
 @login_required
 def delete_participant(request, id):
@@ -224,19 +185,6 @@ def delete_participant(request, id):
     else:
         messages.error(request, "Something Wrong")
         return redirect('admin_dashboard')
-    
-
-""" view Participant List """
-# def view_participant_list(request):
-    # participant_counts = Participant.objects.aggregate(
-    #     total = Count('id')
-    # )
-    # participant = Participant.objects.all()
-    # context = {
-    #     "participant": participant,
-    #     "participant_counts": participant_counts
-    # }
-    # return render(request, "dashboard/manager_dashboard.html", context)
 
 
 @user_passes_test(is_manager, login_url='no-permission')

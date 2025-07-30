@@ -20,10 +20,3 @@ def notify_participant_on_participate_event(sender, instance, action, pk_set, **
                 send_mail(subject,message,settings.EMAIL_HOST_USER,[user.email])
             except Exception as e:
                 print(f"Failed to send email to {user.email}: {str(e)}")
-
-
-# @receiver(post_delete, sender=Event)
-# def delete_associate_details(sender, instance, **kwargs):
-#     if instance.location:
-#         print(isinstance)
-#         instance.location.delete()

@@ -60,16 +60,6 @@ class EventModelForm(StyledFormMixin,forms.ModelForm):
         self.apply_styled_widgets()
         
         
-# class ParticipantModelForm(StyledFormMixin,forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ['name', 'email']
-        
-#     def __init__(self, *arg, **kwarg):
-#         super().__init__(*arg, **kwarg)
-#         self.apply_styled_widgets()
-        
-        
 class CategoryModelForm(StyledFormMixin,forms.ModelForm):
     class Meta:
         model = Category
