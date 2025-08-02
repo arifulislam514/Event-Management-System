@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.contrib.auth import login, logout
 from users.forms import CustomRegistrationForm, AssignRoleForm, CreateGroupForm
 from django.contrib import messages
@@ -15,6 +15,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import FormView, UpdateView, CreateView, ListView
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 
@@ -288,7 +290,7 @@ def update_group(request, id):
             messages.success(request, f"Group {group.name} has been updated successfully")
             return redirect('group-list')
 
-    return render(request, 'admin/create_group.html', {'group_form': group_form})
+    return render(request, 'admin/create_group.html', {'form': group_form})
 
 
 @user_passes_test(is_admin, login_url='no-permission')

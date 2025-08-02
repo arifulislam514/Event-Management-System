@@ -1,16 +1,17 @@
 from django import forms
 import re
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Permission, Group
+from django.contrib.auth.models import Permission, Group
 from events.forms import StyledFormMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name',
-                  'password', 'password2', 'email']
+        fields = ['username', 'first_name', 'last_name', 'password', 'password2', 'email', 'phone_number', 'bio', 'profile_image']
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
@@ -26,7 +27,7 @@ class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name',
-                  'password', 'confirm_password', 'email']
+                  'password', 'confirm_password', 'email', 'phone_number', 'bio', 'profile_image']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')

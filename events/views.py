@@ -5,12 +5,13 @@ from events.forms import EventModelForm, CategoryModelForm, LocationModelForm
 from django.contrib import messages
 from django.db.models import Q, Count, Max, Min, Avg
 from datetime import time, datetime
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 from users.views import is_admin
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 def is_manager(user):
