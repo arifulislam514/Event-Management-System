@@ -1,6 +1,6 @@
 from django.urls import path
 from users.views import activate_user, update_group, no_permission, delete_group, user_list
-from users.views import CustomLoginView, CustomLogoutView, CustomSignupView, AdminDashboardView, CustomAssignRole, CustomCreateGroupView, GroupList, ProfileView
+from users.views import CustomLoginView, CustomLogoutView, CustomSignupView, AdminDashboardView, CustomPasswordResetView, CustomPasswordResetConfirmView, ChangePassword, CustomAssignRole, CustomCreateGroupView, GroupList, ProfileView, EditProfileView
 
 
 urlpatterns = [
@@ -16,6 +16,10 @@ urlpatterns = [
     path('group-list/', GroupList.as_view(), name="group-list"),
     path('user-list/', user_list, name="user-list"),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('edit_profile/', EditProfileView.as_view(), name='edit_profile'),
+    path('password_change/', ChangePassword.as_view(), name='password_change'),
+    path('reset_password/', CustomPasswordResetView.as_view(), name='reset_password'),
+    path('password_reset_confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('admin-dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
     path('no-permission/', no_permission, name="no-permission"),
 ]
