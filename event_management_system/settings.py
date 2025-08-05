@@ -86,25 +86,25 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 # }
 
 # Render Database
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # Replace this value with your local database's connection string.
-#         default='postgresql://event_manager_db_t0fq_user:YsC6OENsGzUWhtnbddPWQeWEtpxmOJ2G@dpg-d211tjk9c44c7393auq0-a.oregon-postgres.render.com/event_manager_db_t0fq',
-#         conn_max_age=600
-#     )
-# }
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_manager_db_25dw_user:fKNFIYdky5BqkpnX4OcRgPkhYCwm6DWE@dpg-d28qcb6r433s73br82p0-a.oregon-postgres.render.com/event_manager_db_25dw',
+        conn_max_age=600
+    )
+}
 
 # LocalHost DataBase
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default=''),
-        'USER': config('DB_USER', default=''),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
-        'PORT': config('DB_PORT', cast=int)
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': config('DB_NAME', default=''),
+#         'USER': config('DB_USER', default=''),
+#         'PASSWORD': config('DB_PASSWORD', default=''),
+#         'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
+#         'PORT': config('DB_PORT', cast=int)
+#     }
+# }
 
 
 # Password validation
@@ -162,12 +162,10 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-# local host url
-# FRONTEND_URL = 'http://127.0.0.1:8000'
 
 # render url 
-# FRONTEND_URL = 'https://event-management-system-v2.onrender.com'
-FRONTEND_URL = 'http://127.0.0.1:8000/'
+FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
+# FRONTEND_URL = 'http://127.0.0.1:8000/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
