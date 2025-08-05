@@ -1,6 +1,6 @@
 from django.urls import path
 from users.views import activate_user, update_group, no_permission, delete_group, user_list
-from users.views import CustomLoginView, CustomLogoutView, CustomSignupView, AdminDashboardView, CustomAssignRole, CustomCreateGroupView, GroupList
+from users.views import CustomLoginView, CustomLogoutView, CustomSignupView, AdminDashboardView, CustomAssignRole, CustomCreateGroupView, GroupList, ProfileView
 
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
     path('delete-group/<int:id>/', delete_group, name="delete-group"),
     path('group-list/', GroupList.as_view(), name="group-list"),
     path('user-list/', user_list, name="user-list"),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('admin-dashboard/', AdminDashboardView.as_view(), name="admin-dashboard"),
     path('no-permission/', no_permission, name="no-permission"),
 ]

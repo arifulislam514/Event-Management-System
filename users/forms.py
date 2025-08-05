@@ -3,7 +3,7 @@ import re
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Permission, Group
 from events.forms import StyledFormMixin
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -19,6 +19,16 @@ class RegisterForm(UserCreationForm):
         for fieldname in ['username', 'password', 'password2']:
             self.fields[fieldname].help_text = None
 
+class CustomPasswordChangeForm(StyledFormMixin, PasswordChangeForm):
+    pass
+
+
+class CustomPasswordResetForm(StyledFormMixin, PasswordResetForm):
+    pass
+
+
+class CustomPasswordResetConfirmForm(StyledFormMixin, SetPasswordForm):
+    pass
 
 class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)

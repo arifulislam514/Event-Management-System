@@ -32,7 +32,7 @@
         {% endif %}
 
         {% comment %} Form {% endcomment %}
-        <form method="POST" class="py-6 px-8">
+        <form method="POST" enctype="multipart/form-data" class="py-6 px-8">
             {% csrf_token %}
             {% for field in form %}
                 <div class="mb-4">

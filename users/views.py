@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import Group
 from django.contrib.auth import login, logout
-from users.forms import CustomRegistrationForm, AssignRoleForm, CreateGroupForm
+from users.forms import CustomRegistrationForm, AssignRoleForm, CreateGroupForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm
 from django.contrib import messages
 from django.contrib import messages
 from users.forms import LoginForm
@@ -11,8 +11,8 @@ from django.db.models import Prefetch, Count, Q
 from datetime import time, datetime
 from events.views import Event, Category
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import FormView, UpdateView, CreateView, ListView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView, PasswordResetConfirmView
+from django.views.generic import TemplateView, FormView, UpdateView, CreateView, ListView
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
@@ -33,6 +33,8 @@ class CustomSignupView(FormView):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data.get('password'))
         user.is_active = False
+        if self.request.FILES:
+            user.profile_image = self.request.FILES.get('profile_image')
         user.save()
         
         messages.success(self.request, 'A Confirmation mail sent. Please check your email')
@@ -316,6 +318,53 @@ class GroupList(ListView):
     template_name = "admin/group_list.html"
     context_object_name = 'groups'
     queryset = Group.objects.prefetch_related('permissions').all()
+
+class ProfileView(TemplateView):
+    template_name = 'profile/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context['username'] = user.username
+        context['email'] = user.email
+        context['name'] = user.get_full_name()
+        context['bio'] = user.bio
+        context['profile_image'] = user.profile_image
+
+        context['member_since'] = user.date_joined
+        context['last_login'] = user.last_login
+        return context
+
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'profile/password_change.html'
+    success_url = reverse_lazy('sign-in')
+    html_email_template_name = 'registration/reset_email.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['protocol'] = 'https' if self.request.is_secure() else 'http'
+        context['domain'] = self.request.get_host()
+        print(context)
+        return context
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'A Reset email sent. Please check your email')
+        return super().form_valid(form)
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomPasswordResetConfirmForm
+    template_name = 'registration/reset_password.html'
+    success_url = reverse_lazy('sign-in')
+
+    def form_valid(self, form):
+        messages.success(
+            self.request, 'Password reset successfully')
+        return super().form_valid(form)
+
 
 def no_permission(request):
     return render(request,'login/no_permission.html')
