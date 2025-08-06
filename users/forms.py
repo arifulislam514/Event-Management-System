@@ -23,7 +23,7 @@ class RegisterForm(UserCreationForm):
 class EditProfileForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'bio', 'profile_image']
+        fields = ['email', 'phone_number', 'first_name', 'last_name', 'bio', 'profile_image']
 
 class CustomPasswordChangeForm(StyledFormMixin, PasswordChangeForm):
     pass
