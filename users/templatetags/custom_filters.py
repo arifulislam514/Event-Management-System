@@ -8,7 +8,7 @@ register = template.Library()
 @register.filter
 def humanized_date(value):
     if value:
-        today = datetime.now().date()
+        today = timezone.localdate()
         value = timezone.localtime(value)
         if value.date() == today:
             return f"Today at {value.strftime('%I:%M %p')}"
