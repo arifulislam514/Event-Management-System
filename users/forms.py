@@ -43,7 +43,7 @@ class CustomRegistrationForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name',
-                  'password', 'confirm_password', 'email', 'phone_number', 'bio', 'profile_image']
+                  'password', 'confirm_password', 'email', 'phone_number']
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
