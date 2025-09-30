@@ -120,10 +120,13 @@ def create_category(request):
         category_form = CategoryModelForm(request.POST)
         
         if category_form.is_valid():
-            category_form.save()
-            
-            messages.success(request,"Category Created Successfully")
-            return redirect('create_category')
+            name = category_form.cleaned_data.get('name')
+            if Category.objects.filter(name__iexact=name).exists():
+                messages.error(request, "A category with this name already exists.")
+            else:
+                category_form.save()
+                messages.success(request,"Category Created Successfully")
+                return redirect('create_category')
         
     context = {"category_form": category_form}
     return render(request, "dashboard/category_form.html", context)

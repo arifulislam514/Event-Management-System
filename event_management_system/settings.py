@@ -16,7 +16,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com', 'http://127.0.0.1:8000/']
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000/']
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -77,27 +77,6 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'event_management',
-#         'USER': 'postgres',
-#         'PASSWORD': '92514',
-#         'HOST': 'localhost',
-#         'PORT': '5432'
-#     }
-# }
-
-# Render Database
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_manager_db_25dw_user:fKNFIYdky5BqkpnX4OcRgPkhYCwm6DWE@dpg-d28qcb6r433s73br82p0-a.oregon-postgres.render.com/event_manager_db_25dw',
-        conn_max_age=600
-    )
-}
-
-# LocalHost DataBase
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': config('DB_NAME', default=''),
 #         'USER': config('DB_USER', default=''),
 #         'PASSWORD': config('DB_PASSWORD', default=''),
@@ -105,6 +84,16 @@ DATABASES = {
 #         'PORT': config('DB_PORT', cast=int)
 #     }
 # }
+
+# Render Database
+DATABASES = {
+    'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://event_management_db_di9a_user:Iq1L4ecX8LkxeR05L4NRUms92sJZsFsf@dpg-d3e0kkvdiees73fop22g-a.oregon-postgres.render.com/event_management_db_di9a',
+        conn_max_age=600
+    )
+}
+
 
 
 # Password validation
@@ -164,8 +153,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # render url 
-FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
-# FRONTEND_URL = 'http://127.0.0.1:8000/'
+# FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
+FRONTEND_URL = 'http://127.0.0.1:8000/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
