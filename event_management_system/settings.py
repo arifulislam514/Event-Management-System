@@ -75,13 +75,14 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default=''),
-        'USER': config('DB_USER', default=''),
-        'PASSWORD': config('DB_PASSWORD', default=''),
-        'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
-        'PORT': config('DB_PORT', cast=int)
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME", default="postgres"),
+        "USER": config("DB_USER", default="postgres"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),     # e.g. db.xxxxx.supabase.co  ← NO http://
+        "PORT": config("DB_PORT", cast=int, default=5432),
+        "OPTIONS": {"sslmode": "require"},  # Supabase needs SSL
     }
 }
 
@@ -153,8 +154,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 # render url 
-# FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
 FRONTEND_URL = config('FRONTEND_URL')
+# https://event-management-system-iyph.onrender.com
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
