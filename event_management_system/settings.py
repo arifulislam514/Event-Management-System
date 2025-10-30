@@ -15,7 +15,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['event-management-system-iyph.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'event-management-system-iyph.onrender.com']
 CSRF_TRUSTED_ORIGINS = ['https://event-management-system-iyph.onrender.com']
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -154,7 +154,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # render url 
 # FRONTEND_URL = 'https://event-management-system-iyph.onrender.com'
-FRONTEND_URL = 'http://127.0.0.1:8000/'
+FRONTEND_URL = config('FRONTEND_URL')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
