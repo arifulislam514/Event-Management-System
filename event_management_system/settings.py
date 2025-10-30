@@ -74,25 +74,25 @@ WSGI_APPLICATION = 'event_management_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': config('DB_NAME', default=''),
-#         'USER': config('DB_USER', default=''),
-#         'PASSWORD': config('DB_PASSWORD', default=''),
-#         'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
-#         'PORT': config('DB_PORT', cast=int)
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME', default=''),
+        'USER': config('DB_USER', default=''),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='http://127.0.0.1:8000/'),
+        'PORT': config('DB_PORT', cast=int)
+    }
+}
 
 # Render Database
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgresql://event_management_db_di9a_user:Iq1L4ecX8LkxeR05L4NRUms92sJZsFsf@dpg-d3e0kkvdiees73fop22g-a.oregon-postgres.render.com/event_management_db_di9a',
-        conn_max_age=600
-    )
-}
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://event_management_db_di9a_user:Iq1L4ecX8LkxeR05L4NRUms92sJZsFsf@dpg-d3e0kkvdiees73fop22g-a.oregon-postgres.render.com/event_management_db_di9a',
+#         conn_max_age=600
+#     )
+# }
 
 
 
