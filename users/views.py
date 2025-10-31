@@ -32,12 +32,13 @@ class CustomSignupView(FormView):
     def form_valid(self, form):
         user = form.save(commit=False)
         user.set_password(form.cleaned_data.get('password'))
-        user.is_active = False
+        user.is_active = True
         if self.request.FILES:
             user.profile_image = self.request.FILES.get('profile_image')
         user.save()
         
-        messages.success(self.request, 'A Confirmation mail sent. Please check your email')
+        # messages.success(self.request, 'A Confirmation mail sent. Please check your email')
+        messages.success(self.request, 'Accaount created successfully. You can now log in.')
         return super().form_valid(form)
     
     def form_invalid(self, form):
